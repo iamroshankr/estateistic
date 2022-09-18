@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Box, Grid, Typography, InputBase, IconButton, Button, TextField, Divider, MenuItem, styled, Select } from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
 
@@ -40,9 +41,20 @@ const FieldBox = styled(Grid)`
     }
 `;
 
-const Filter = () => {
+const Filter = ({ filters, setFilters }) => {
 
     const date = new Date().toISOString().split('T')[0];
+
+    useEffect( () => {
+        setFilters({ ...filters, moveDate: date });
+    }, []);
+
+    const handleFilterChange = (evt) => {
+        setFilters({
+            ...filters,
+            [evt.target.name]: evt.target.value
+        });
+    };
 
     return (
         <Component>
@@ -72,12 +84,18 @@ const Filter = () => {
                 <FieldBox item lg={2} md={2} sm={6} xs={12}>
 
                     <Typography style={{ fontSize: 14, fontWeight: 600, color: '#7f7f7f' }} >Location</Typography>
-                    <TextField
-                        type='text'
-                        id="standard-text"
-                        defaultValue="New Delhi"
+                    <Select
+                        id="location"
+                        name="location"
                         variant="standard"
-                    />
+                        value={filters.location}
+                        onChange={handleFilterChange}
+                    >
+                        <MenuItem style={{ fontSize: 14 }} key="delhi" value="New Delhi" >New Delhi</MenuItem>
+                        <MenuItem style={{ fontSize: 14 }} key="gurgaon" value="Gurgaon" >Gurgaon, Haryana</MenuItem>
+                        <MenuItem style={{ fontSize: 14 }} key="noida" value="Noida" >Noida, UP</MenuItem>
+                        <MenuItem style={{ fontSize: 14 }} key="alwar" value="Alwar" >Alwar, Rajasthan</MenuItem>
+                    </Select>
 
                 </FieldBox>
 
@@ -86,10 +104,12 @@ const Filter = () => {
                     <Typography style={{ fontSize: 14, fontWeight: 600, color: '#7f7f7f' }} >Move-in Date</Typography>
                     <TextField
                         type="date"
-                        id="standard-date"
-                        defaultValue={date}
+                        id="moveDate"
+                        name="moveDate"
                         inputProps={{ min: date }}
                         variant="standard"
+                        value={filters.moveDate}
+                        onChange={handleFilterChange}
                     />
 
                 </FieldBox>
@@ -98,14 +118,16 @@ const Filter = () => {
 
                     <Typography style={{ fontSize: 14, fontWeight: 600, color: '#7f7f7f' }} >Price (₹)</Typography>
                     <Select
-                        id="standard-price"
-                        defaultValue="select"
+                        id="price"
+                        name="price"
                         variant="standard"
+                        value={filters.price}
+                        onChange={handleFilterChange}
                     >
-                        <MenuItem style={{ fontSize: 14 }} key="op1" value="300000" >Less than 3 Lakhs</MenuItem>
-                        <MenuItem style={{ fontSize: 14 }} key="op2" value="600000" >3 Lakhs - 6 Lakhs</MenuItem>
-                        <MenuItem style={{ fontSize: 14 }} key="op3" value="1000000" >6 Lakhs - 10 Lakhs</MenuItem>
-                        <MenuItem style={{ fontSize: 14 }} key="op4" value="1000001" >More than 10 Lakhs</MenuItem>
+                        <MenuItem style={{ fontSize: 14 }} key="op1" value={300000} >Less than 3 Lakhs</MenuItem>
+                        <MenuItem style={{ fontSize: 14 }} key="op2" value={600000} >3 Lakhs - 6 Lakhs</MenuItem>
+                        <MenuItem style={{ fontSize: 14 }} key="op3" value={1000000} >6 Lakhs - 10 Lakhs</MenuItem>
+                        <MenuItem style={{ fontSize: 14 }} key="op4" value={1000001} >More than 10 Lakhs</MenuItem>
                     </Select>
 
                 </FieldBox>
@@ -114,9 +136,11 @@ const Filter = () => {
 
                     <Typography style={{ fontSize: 14, fontWeight: 600, color: '#7f7f7f' }} >Property Type</Typography>
                     <Select
-                        id="standard-ptype"
-                        defaultValue="select"
+                        id="pType"
+                        name="pType"
                         variant="standard"
+                        value={filters.pType}
+                        onChange={handleFilterChange}
                     >
                         <MenuItem style={{ fontSize: 14 }} key="house" value="house" >House</MenuItem>
                         <MenuItem style={{ fontSize: 14 }} key="land" value="land" >Vacant Land</MenuItem>

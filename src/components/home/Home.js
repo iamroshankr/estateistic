@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Grid, Box, styled } from "@mui/material";
 
 import CustomCard from "./CustomCard";
@@ -10,11 +11,20 @@ const Component = styled(Box)`
 
 const Home = () => {
 
+    const [filters, setFilters] = useState({
+        location: 'New Delhi',
+        moveDate: '',
+        price: 300000,
+        pType: 'house'
+    });
+
     const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
     return (
         <Component>
-            <Filter />
+
+            <Filter filters={filters} setFilters={setFilters} />
+
             <Grid container spacing={5}>
                 {cards.map((card) => (
 
@@ -24,6 +34,7 @@ const Home = () => {
 
                 ))}
             </Grid>
+            
         </Component>
     );
 
