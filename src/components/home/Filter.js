@@ -1,9 +1,9 @@
-import { useEffect } from "react";
+import { useState } from "react";
 import { Box, Grid, Typography, InputBase, IconButton, Button, TextField, Divider, MenuItem, styled, Select } from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
 
 const Component = styled(Box)`
-    margin-bottom: 20px;
+    margin-bottom: 40px;
     background: #fff;
 `;
 
@@ -43,17 +43,20 @@ const FieldBox = styled(Grid)`
 
 const Filter = ({ filters, setFilters }) => {
 
+    const [tempState, setTempState] = useState({ ...filters }); //temporary state built so that filters are applied only on clicking the search button
+
     const date = new Date().toISOString().split('T')[0];
 
-    useEffect( () => {
-        setFilters({ ...filters, moveDate: date });
-    }, []);
-
     const handleFilterChange = (evt) => {
-        setFilters({
-            ...filters,
+        setTempState({
+            ...tempState,
             [evt.target.name]: evt.target.value
         });
+        // console.log(filters);
+    };
+
+    const applyFilters = () => {
+        setFilters({ ...tempState });
     };
 
     return (
@@ -88,9 +91,10 @@ const Filter = ({ filters, setFilters }) => {
                         id="location"
                         name="location"
                         variant="standard"
-                        value={filters.location}
+                        value={tempState.location}
                         onChange={handleFilterChange}
                     >
+                        <MenuItem style={{ fontSize: 14 }} key="all" value="select" >-- Select --</MenuItem>
                         <MenuItem style={{ fontSize: 14 }} key="delhi" value="New Delhi" >New Delhi</MenuItem>
                         <MenuItem style={{ fontSize: 14 }} key="gurgaon" value="Gurgaon" >Gurgaon, Haryana</MenuItem>
                         <MenuItem style={{ fontSize: 14 }} key="noida" value="Noida" >Noida, UP</MenuItem>
@@ -108,7 +112,7 @@ const Filter = ({ filters, setFilters }) => {
                         name="moveDate"
                         inputProps={{ min: date }}
                         variant="standard"
-                        value={filters.moveDate}
+                        value={tempState.moveDate}
                         onChange={handleFilterChange}
                     />
 
@@ -121,13 +125,14 @@ const Filter = ({ filters, setFilters }) => {
                         id="price"
                         name="price"
                         variant="standard"
-                        value={filters.price}
+                        value={tempState.price}
                         onChange={handleFilterChange}
                     >
-                        <MenuItem style={{ fontSize: 14 }} key="op1" value={300000} >Less than 3 Lakhs</MenuItem>
-                        <MenuItem style={{ fontSize: 14 }} key="op2" value={600000} >3 Lakhs - 6 Lakhs</MenuItem>
-                        <MenuItem style={{ fontSize: 14 }} key="op3" value={1000000} >6 Lakhs - 10 Lakhs</MenuItem>
-                        <MenuItem style={{ fontSize: 14 }} key="op4" value={1000001} >More than 10 Lakhs</MenuItem>
+                        <MenuItem style={{ fontSize: 14 }} key="op0" value="select" >-- Select --</MenuItem>
+                        <MenuItem style={{ fontSize: 14 }} key="op1" value="0L-3L" >Less than 3 Lakhs</MenuItem>
+                        <MenuItem style={{ fontSize: 14 }} key="op2" value="3L-6L" >3 Lakhs - 6 Lakhs</MenuItem>
+                        <MenuItem style={{ fontSize: 14 }} key="op3" value="6L-10L" >6 Lakhs - 10 Lakhs</MenuItem>
+                        <MenuItem style={{ fontSize: 14 }} key="op4" value=">10L" >More than 10 Lakhs</MenuItem>
                     </Select>
 
                 </FieldBox>
@@ -139,9 +144,10 @@ const Filter = ({ filters, setFilters }) => {
                         id="pType"
                         name="pType"
                         variant="standard"
-                        value={filters.pType}
+                        value={tempState.pType}
                         onChange={handleFilterChange}
                     >
+                        <MenuItem style={{ fontSize: 14 }} key="all" value="select" >-- Select --</MenuItem>
                         <MenuItem style={{ fontSize: 14 }} key="house" value="house" >House</MenuItem>
                         <MenuItem style={{ fontSize: 14 }} key="land" value="land" >Vacant Land</MenuItem>
                         <MenuItem style={{ fontSize: 14 }} key="ind/comm" value="ind/comm" >Industrial/Commercial</MenuItem>
@@ -150,9 +156,10 @@ const Filter = ({ filters, setFilters }) => {
 
                 </FieldBox>
 
-                <Button variant='contained' style={{ height: 35, background: '#3c0080' }} >Search</Button>
+                <Button variant='contained' style={{ height: 35, background: '#3c0080' }} onClick={applyFilters} >Search</Button>
 
             </BottomBox>
+            <Typography style={{marginLeft: 10, padding: 10, fontSize: 14, color: '#7f7f7f' }}>*Click on the search button to apply the filters.</Typography>
 
         </Component>
     );
